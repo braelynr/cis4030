@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'attractions.dart' as attractions;
 
 void main() {
-  runApp(new MaterialApp(home: new MyApp()));
+  runApp(new MaterialApp(debugShowCheckedModeBanner: false, home: new MyApp()));
 }
 
 bool picnic = true;
@@ -24,12 +24,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Home()
+        home: MyNavigationBar(),
     );
   }
 }
 
-class Home extends StatelessWidget{
+class MyNavigationBar extends StatefulWidget {
+  MyNavigationBar ({Key? key}) : super(key: key);
+  @override
+  Home createState() => Home();
+}
+
+class Home extends State<MyNavigationBar>{
+
+  int _selectedIndex = 0;
+  static const List<Widget> _options = <Widget>[
+    MyStatefulWidget(),
+    Schedule(),
+  ];
+
+  void _onItemTap(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -62,6 +80,9 @@ class Home extends StatelessWidget{
             ),
 
           ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTap,
+          selectedItemColor: Colors.orange,
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: "plus",
@@ -74,7 +95,9 @@ class Home extends StatelessWidget{
           backgroundColor: Colors.blue,
           child: const Icon(Icons.add),
         ),
-        body: const MyStatefulWidget(),
+        body: Center(
+          child: _options.elementAt(_selectedIndex),
+        ),
       ),
     );
   }
@@ -88,7 +111,7 @@ showFilterDialog(BuildContext context){
       style: TextStyle(color: Colors.blue),
     ),
     onPressed: () {
-      Navigator.of(context).pop();
+      Navigator.of(context, rootNavigator: true).pop('dialog');
     },
   );
 
@@ -633,6 +656,21 @@ class AddAttraction extends StatelessWidget {
           'Add Attraction',
         )
       )
+    );
+  }
+}
+
+class Schedule extends StatelessWidget {
+  const Schedule({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+            child: Text(
+              'Schedule Page',
+            )
+        )
     );
   }
 }
