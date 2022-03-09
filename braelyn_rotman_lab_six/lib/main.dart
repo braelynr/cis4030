@@ -16,27 +16,25 @@ bool swimming = true;
 bool camping = true;
 bool education = true;
 
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: MyNavigationBar(),
+      debugShowCheckedModeBanner: false,
+      home: MyNavigationBar(),
     );
   }
 }
 
 class MyNavigationBar extends StatefulWidget {
-  MyNavigationBar ({Key? key}) : super(key: key);
+  MyNavigationBar({Key? key}) : super(key: key);
   @override
   Home createState() => Home();
 }
 
-class Home extends State<MyNavigationBar>{
-
+class Home extends State<MyNavigationBar> {
   int _selectedIndex = 0;
   static const List<Widget> _options = <Widget>[
     MyStatefulWidget(),
@@ -48,62 +46,76 @@ class Home extends State<MyNavigationBar>{
       _selectedIndex = index;
     });
   }
+
+  refreshFilters(){
+    setState(() {
+      print("refreshFilters()");
+    });
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Lab Six - Braelyn Rotman',
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Lab Six - Braelyn Rotman',
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.filter_alt),
+            color: Colors.white,
+            onPressed: () {
+              showFilterDialog(context, refreshFilters);
+            },
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.filter_alt),
-              color: Colors.white,
-              onPressed: () {
-                showFilterDialog(context);
-              },
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.list),
-              label: 'Attractions',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Scheduled',
-            ),
-
-          ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTap,
-          selectedItemColor: Colors.orange,
-        ),
-        floatingActionButton: FloatingActionButton(
-          heroTag: "plus",
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddAttraction()),
-            );
-          },
-          backgroundColor: Colors.blue,
-          child: const Icon(Icons.add),
-        ),
-        body: Center(
-          child: _options.elementAt(_selectedIndex),
-        ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Attractions',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Scheduled',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTap,
+        selectedItemColor: Colors.orange,
+      ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: "plus",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddAttraction()),
+          );
+        },
+        backgroundColor: Colors.blue,
+        child: const Icon(Icons.add),
+      ),
+      body: Center(
+        child: _options.elementAt(_selectedIndex),
       ),
     );
   }
 }
 
-showFilterDialog(BuildContext context){
+showFilterDialog(BuildContext context, Function refreshFilters) {
+  bool pictemp = picnic;
+  bool playtemp = playground;
+  bool htemp = hiking;
+  bool btemp = boating;
+  bool itemp = icecream;
+  bool ttemp = tea;
+  bool ftemp = flowers;
+  bool stemp = swimming;
+  bool ctemp = camping;
+  bool etemp = education;
+
   // Create button
   Widget okButton = FlatButton(
     child: Text(
@@ -111,16 +123,27 @@ showFilterDialog(BuildContext context){
       style: TextStyle(color: Colors.blue),
     ),
     onPressed: () {
+      picnic = pictemp;
+      playground = playtemp;
+      hiking = htemp;
+      boating = btemp;
+      icecream = itemp;
+      tea = ttemp;
+      flowers = ftemp;
+      swimming = stemp;
+      camping = ctemp;
+      education = etemp;
+      refreshFilters();
       Navigator.of(context, rootNavigator: true).pop('dialog');
     },
   );
 
-  double getPaddingTest(){
-     if(MediaQuery.of(context).orientation == Orientation.landscape)
-       return 200;
-     return 40; // default value according to flutter docs
+  double getPaddingTest() {
+    if (MediaQuery.of(context).orientation == Orientation.landscape) return 200;
+    return 40; // default value according to flutter docs
   }
 
+  // maybe use temp variables and only update actual ones when apply button is clicked
   showDialog(
     context: context,
     builder: (context) {
@@ -129,7 +152,7 @@ showFilterDialog(BuildContext context){
         builder: (context, setState) {
           return AlertDialog(
             title: Text("Adjust Filters"),
-           // if(MediaQuery.of(context).orientation == Orientation.landscape)
+            // if(MediaQuery.of(context).orientation == Orientation.landscape)
             //  insetPadding: EdgeInsets.symmetric(horizontal: 200)
             insetPadding: EdgeInsets.symmetric(horizontal: getPaddingTest()),
             content: Wrap(
@@ -139,11 +162,13 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      picnic = !picnic;
+                      pictemp = !pictemp;
                     });
                   },
                   child: Card(
-                    color: picnic ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color: pictemp
+                        ? Color.fromRGBO(255, 255, 255, 0.0)
+                        : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -156,7 +181,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: picnic ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: pictemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -167,11 +194,13 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      playground = !playground;
+                      playtemp = !playtemp;
                     });
                   },
                   child: Card(
-                    color: playground ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color: playtemp
+                        ? Color.fromRGBO(255, 255, 255, 0.0)
+                        : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -184,7 +213,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: playground ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: playtemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -195,11 +226,13 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      hiking = !hiking;
+                      htemp = !htemp;
                     });
                   },
                   child: Card(
-                    color: hiking ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color: htemp
+                        ? Color.fromRGBO(255, 255, 255, 0.0)
+                        : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -212,7 +245,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: hiking ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: htemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -223,11 +258,13 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      boating = !boating;
+                      btemp = !btemp;
                     });
                   },
                   child: Card(
-                    color: boating ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color: btemp
+                        ? Color.fromRGBO(255, 255, 255, 0.0)
+                        : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -240,7 +277,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: boating ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: btemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -251,11 +290,13 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      icecream = !icecream;
+                      itemp = !itemp;
                     });
                   },
                   child: Card(
-                    color: icecream ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color: itemp
+                        ? Color.fromRGBO(255, 255, 255, 0.0)
+                        : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -268,7 +309,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: icecream ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: itemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -279,11 +322,12 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      tea = !tea;
+                      ttemp = !ttemp;
                     });
                   },
                   child: Card(
-                    color: tea ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color:
+                        ttemp ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -296,7 +340,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: tea ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: ttemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -307,11 +353,13 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      flowers = !flowers;
+                      ftemp = !ftemp;
                     });
                   },
                   child: Card(
-                    color: flowers ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color: ftemp
+                        ? Color.fromRGBO(255, 255, 255, 0.0)
+                        : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -324,7 +372,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: flowers ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: ftemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -335,11 +385,13 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      swimming = !swimming;
+                      stemp = !stemp;
                     });
                   },
                   child: Card(
-                    color: swimming ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color: stemp
+                        ? Color.fromRGBO(255, 255, 255, 0.0)
+                        : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -352,7 +404,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: swimming ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: stemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -363,11 +417,13 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      camping = !camping;
+                      ctemp = !ctemp;
                     });
                   },
                   child: Card(
-                    color: camping ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color: ctemp
+                        ? Color.fromRGBO(255, 255, 255, 0.0)
+                        : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -380,7 +436,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: camping ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: ctemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -391,11 +449,13 @@ showFilterDialog(BuildContext context){
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      education = !education;
+                      etemp = !etemp;
                     });
                   },
                   child: Card(
-                    color: education ? Color.fromRGBO(255, 255, 255, 0.0) : Colors.white,
+                    color: etemp
+                        ? Color.fromRGBO(255, 255, 255, 0.0)
+                        : Colors.white,
                     child: Stack(
                       children: [
                         Padding(
@@ -408,7 +468,9 @@ showFilterDialog(BuildContext context){
                           heightFactor: 1.0,
                           child: Icon(
                             Icons.check_circle,
-                            color: education ? Colors.black : Color.fromRGBO(255, 255, 255, 0.0),
+                            color: etemp
+                                ? Colors.black
+                                : Color.fromRGBO(255, 255, 255, 0.0),
                             size: 12,
                           ),
                         ),
@@ -421,7 +483,8 @@ showFilterDialog(BuildContext context){
             actions: [
               okButton,
             ],
-          );;
+          );
+          ;
         },
       );
     },
@@ -440,80 +503,122 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.height, // probably not quite what they meant but oh well
+      width: MediaQuery.of(context).size.height,
       child: ListView.separated(
         padding: const EdgeInsets.all(15),
         itemCount: attractions.guelphAttractions.length,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () => CardTapped(index),
-              child: Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        '${attractions.guelphAttractions[index]['title']}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Hero(
-                        tag: 'imageHero$index',
-                        child: Image.network(attractions.guelphAttractions[index]['imageURL']),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          for(var item in attractions.guelphAttractions[index]['categories'])
-                            Card(
-                              child: Padding(
-                                padding: EdgeInsets.all(5.0),
-                                child: Text(item),
-                              ),
-                            )
-                        ],
-                      ),
-                      Text(
-                        '${attractions.guelphAttractions[index]['address']}',
-                      ),
-                      if(attractions.guelphAttractions[index]['isFree'] == false)
-                        Icon(
-                          Icons.attach_money,
-                          size: 30,
-                        )
-                      else if(attractions.guelphAttractions[index]['isFree'] == true)
-                        Icon(
-                          Icons.money_off,
-                          size: 30,
-                        )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Color.fromRGBO(200,200,200,1),
-                  blurRadius: 15.0,
-                  offset: Offset(0.0, 15),
-                ),
-              ],
-            ),
-          );
+          return attractionCard(index);
         },
-        separatorBuilder: (context, index) => SizedBox(height: 30),
+        separatorBuilder: (context, index) => SizedBox(height: 10),
       ),
     );
   }
 
-  CardTapped(int cardIndex){
+  CardTapped(int cardIndex) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ScheduleAttraction(index: cardIndex,)),
+      MaterialPageRoute(
+          builder: (context) => ScheduleAttraction(
+                index: cardIndex,
+              )),
     );
+  }
+
+  attractionCard(int index) {
+    if ((attractions.guelphAttractions[index]['categories'].contains("Picnic") &&
+            picnic == false) ||
+        (attractions.guelphAttractions[index]['categories']
+                .contains("Playground") &&
+            playground == false) ||
+        (attractions.guelphAttractions[index]['categories'].contains("Hiking") &&
+            hiking == false) ||
+        (attractions.guelphAttractions[index]['categories'].contains("Boating") &&
+            boating == false) ||
+        (attractions.guelphAttractions[index]['categories']
+                .contains("Ice-Cream") &&
+            icecream == false) ||
+        (attractions.guelphAttractions[index]['categories'].contains("Tea") &&
+            tea == false) ||
+        (attractions.guelphAttractions[index]['categories'].contains("Flowers") &&
+            flowers == false) ||
+        (attractions.guelphAttractions[index]['categories'].contains("Swimming") &&
+            swimming == false) ||
+        (attractions.guelphAttractions[index]['categories'].contains("Camping") &&
+            camping == false) ||
+        (attractions.guelphAttractions[index]['categories']
+                .contains("Education") &&
+            education == false)) {
+      return Container();
+    } else {
+      return Container(
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => CardTapped(index),
+          child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    '${attractions.guelphAttractions[index]['title']}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Hero(
+                    tag: 'imageHero$index',
+                    child: Image.network(
+                        attractions.guelphAttractions[index]['imageURL']),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      for (var item in attractions.guelphAttractions[index]
+                          ['categories'])
+                        Card(
+                          child: Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Text(item),
+                          ),
+                        )
+                    ],
+                  ),
+                  Text(
+                    '${attractions.guelphAttractions[index]['address']}',
+                  ),
+                  if (attractions.guelphAttractions[index]['isFree'] == false)
+                    Icon(
+                      Icons.attach_money,
+                      size: 30,
+                    )
+                  else if (attractions.guelphAttractions[index]['isFree'] ==
+                      true)
+                    Icon(
+                      Icons.money_off,
+                      size: 30,
+                    )
+                ],
+              ),
+            ),
+          ),
+        ),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(200, 200, 200, 1),
+              blurRadius: 15.0,
+              offset: Offset(0.0, 15),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // @override
+    // Widget build(BuildContext context) {
+    //
+    // }
   }
 }
 
@@ -541,10 +646,9 @@ class ScheduleAttraction extends StatelessWidget {
                   image: DecorationImage(
                     fit: BoxFit.fitHeight,
                     colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.7),
-                        BlendMode.darken
-                    ),
-                    image: NetworkImage(attractions.guelphAttractions[index]['imageURL']),
+                        Colors.black.withOpacity(0.7), BlendMode.darken),
+                    image: NetworkImage(
+                        attractions.guelphAttractions[index]['imageURL']),
                   ),
                 ),
               ),
@@ -571,7 +675,8 @@ class ScheduleAttraction extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    for(var item in attractions.guelphAttractions[index]['categories'])
+                    for (var item in attractions.guelphAttractions[index]
+                        ['categories'])
                       Card(
                         child: Padding(
                           padding: EdgeInsets.all(5.0),
@@ -616,32 +721,31 @@ class ScheduleAttraction extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 26),
                 ),
               ),
-
-              if(attractions.guelphAttractions[index]['isFree'] == true)
+              if (attractions.guelphAttractions[index]['isFree'] == true)
                 Center(
                   child: Text(
-                      'Free',
+                    'Free',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 )
-              else if(attractions.guelphAttractions[index]['isFree'] == false)
+              else if (attractions.guelphAttractions[index]['isFree'] == false)
                 Icon(
                   Icons.attach_money,
                   size: 30,
                   color: Colors.white,
-                )
-              ,
+                ),
               Padding(padding: EdgeInsets.all(16.0)),
               Center(
                 child: FlatButton(
-                  child: Text('Add', style: TextStyle(fontSize: 16.0),),
+                  child: Text(
+                    'Add',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
                   color: Colors.blueAccent,
                   textColor: Colors.white,
                   onPressed: () {},
                 ),
               ),
-
-
             ],
           ),
         ],
@@ -656,19 +760,17 @@ class AddAttraction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Attraction'),
-        leading: new IconButton(
-          icon: new Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.of(context).pop(),
+        appBar: AppBar(
+          title: const Text('Add Attraction'),
+          leading: new IconButton(
+            icon: new Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
-      ),
-      body: Center(
-        child: Text(
+        body: Center(
+            child: Text(
           'Add Attraction',
-        )
-      )
-    );
+        )));
   }
 }
 
@@ -680,9 +782,7 @@ class Schedule extends StatelessWidget {
     return Scaffold(
         body: Center(
             child: Text(
-              'Schedule Page',
-            )
-        )
-    );
+      'Schedule Page',
+    )));
   }
 }
