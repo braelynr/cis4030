@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../components/filter_dialog.dart';
 import './add_attraction.dart';
 import './attraction_list_page.dart';
@@ -6,7 +7,6 @@ import './attraction_schedule_page.dart';
 
 import '../../core/models/attraction.dart';
 import '../../core/models/guelph_attractions.dart';
-import '../../core/models/schedule.dart';
 
 class BottomTabBarScaffold extends StatefulWidget {
   @override
@@ -39,17 +39,19 @@ class _BottomTabBarScaffoldState extends State<BottomTabBarScaffold> {
 
   final List<Attraction> attractions = GuelphAttractions.guelphAttractions;
 
-  void updateCategories(Map<String, bool> newCategories) {
-    setState(() {
+  void updateCategories(Map<String, bool> newCategories, BuildContext context) {
+   // setState(() {
       categories = newCategories;
-    });
+      var attractionList = context.read<GuelphAttractions>();
+      attractionList.filterUpdate();
+   // });
   }
 
-  void addAttraction(Attraction attraction) {
-    setState(() {
-      attractions.add(attraction);
-    });
-  }
+  // void addAttraction(Attraction attraction) {
+  //   setState(() {
+  //     attractions.add(attraction);
+  //   });
+  // }
 
   void filterCategories(BuildContext context) {
     showDialog(
@@ -64,33 +66,35 @@ class _BottomTabBarScaffoldState extends State<BottomTabBarScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Lab Eight - Braelyn Rotman"),
-        actions: [
-          IconButton(
-            onPressed: () => filterCategories(context),
-            icon: Icon(Icons.filter_list_alt),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AddAttraction(
-              addAttraction: addAttraction,
-            )),
+    return Consumer<GuelphAttractions>(
+        builder: (context, attractionList, child) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Lab Eight - Braelyn Rotman"),
+              actions: [
+                IconButton(
+                  onPressed: () => filterCategories(context),
+                  icon: Icon(Icons.filter_list_alt),
+                ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AddAttraction()),
+                );
+              },
+              child: Icon(Icons.add),
+            ),
+            body: _selectedIndex == 0
+                ? AttractionListPage(
+                  attractions: attractions,
+                  categoriesToShow: categories,
+                )
+                : AttractionsSchedulePage(),
+            bottomNavigationBar: _buildBottomNavBar(),
           );
         },
-        child: Icon(Icons.add),
-      ),
-      body: _selectedIndex == 0
-          ? AttractionListPage(
-            attractions: attractions,
-            categoriesToShow: categories,
-          )
-          : AttractionsSchedulePage(),
-      bottomNavigationBar: _buildBottomNavBar(),
     );
   }
 

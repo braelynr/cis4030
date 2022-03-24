@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import '../models/attraction.dart';
+import 'dart:collection';
+
 
 ///Contains a list of the attractions in guelph
-class GuelphAttractions {
+class GuelphAttractions extends ChangeNotifier{
   static List<Attraction> guelphAttractions = [
     Attraction(
       title: 'Riverside Park',
@@ -63,4 +66,29 @@ class GuelphAttractions {
       description: "The University of Guelph is a comprehensive public research university in Guelph, Ontario, Canada. It was established in 1964 after the amalgamation of Ontario Agricultural College (1874), the MacDonald Institute (1903), and the Ontario Veterinary College (1922), and has since grown to an institution of almost 30,000 students (including those at the Humber campus, Ridgetown campus, off-campus degree enrolments, diploma enrolments and part-time students) and employs 830 full-time faculty (academic staff) as of fall 2019.",
     )
   ];
+
+  /// An unmodifiable view of the items in the schedule.
+  UnmodifiableListView<Attraction> get items => UnmodifiableListView(guelphAttractions);
+
+  int get listLength => guelphAttractions.length;
+
+  /// Adds [item] to cart. This and [removeAll] are the only ways to modify the
+  /// cart from the outside.
+  void add(Attraction item) {
+    guelphAttractions.add(item);
+    // This call tells the widgets that are listening to this model to rebuild.
+    notifyListeners();
+  }
+
+  /// Removes all items from the cart.
+  void removeAll() {
+    guelphAttractions.clear();
+    // This call tells the widgets that are listening to this model to rebuild.
+    notifyListeners();
+  }
+
+  void filterUpdate(){
+    //print("filterUpdate");
+    notifyListeners();
+  }
 }

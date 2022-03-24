@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/models/attraction.dart';
 import '../../core/models/guelph_attractions.dart';
 import '../components/attraction_card.dart';
@@ -24,34 +25,38 @@ class AttractionListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      var width = MediaQuery.of(context).size.width;
-      var height = MediaQuery.of(context).size.height;
+    return Consumer<GuelphAttractions>(
+        builder: (context, attractionList, child) {
+          return LayoutBuilder(builder: (context, constraints) {
+            var width = MediaQuery.of(context).size.width;
+            var height = MediaQuery.of(context).size.height;
 
-      double minSize;
-      if (width < height) {
-        minSize = width;
-      } else {
-        minSize = height;
-      }
-      return Center(
-        child: Container(
-          width: minSize,
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              if (isShown(attractions[index])) {
-                return AttractionCard(
-                  index: index,
-                  attractions: attractions,
-                );
-              } else {
-                return Container();
-              }
-            },
-            itemCount: attractions.length,
-          ),
-        ),
-      );
-    });
+            double minSize;
+            if (width < height) {
+              minSize = width;
+            } else {
+              minSize = height;
+            }
+            return Center(
+              child: Container(
+                width: minSize,
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    if (isShown(attractions[index])) {
+                      return AttractionCard(
+                        index: index,
+                        attractions: attractions,
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                  itemCount: attractions.length,
+                ),
+              ),
+            );
+          });
+        }
+    );
   }
 }

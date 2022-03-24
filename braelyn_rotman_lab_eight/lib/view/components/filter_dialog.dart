@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../core/models/guelph_attractions.dart';
 
 class FilterDialog extends StatefulWidget {
   const FilterDialog({
@@ -8,7 +10,7 @@ class FilterDialog extends StatefulWidget {
   }) : super(key: key);
 
   final Map<String, bool> categories;
-  final Function(Map<String, bool>) updateCategories;
+  final Function(Map<String, bool>, BuildContext) updateCategories;
 
   @override
   State<FilterDialog> createState() => _FilterDialogState();
@@ -59,7 +61,9 @@ class _FilterDialogState extends State<FilterDialog> {
         TextButton(
           child: const Text('Apply'),
           onPressed: () {
-            widget.updateCategories(categories_copy);
+            widget.updateCategories(categories_copy, context);
+            var attractionList = context.read<GuelphAttractions>();
+            attractionList.filterUpdate();
             Navigator.of(context).pop();
           },
         ),

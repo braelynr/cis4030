@@ -12,8 +12,6 @@ class AttractionsSchedulePage extends StatelessWidget {
           // Use SomeExpensiveWidget here, without rebuilding every time.
           if (child != null) child,
             _attractionList(context, schedule),
-            // if (${schedule.listLength == 0}) child,
-            //   Text("No Attractions Scheduled"),
         ],
       ),
       // Build the expensive widget here.

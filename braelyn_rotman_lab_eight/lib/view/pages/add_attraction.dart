@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/models/attraction.dart';
+import '../../core/models/guelph_attractions.dart';
 
 class AddAttraction extends StatefulWidget {
-  final Function(Attraction) addAttraction;
-  AddAttraction({required this.addAttraction});
   @override
   State<AddAttraction> createState() => _AddAttractionState();
 }
@@ -141,7 +141,8 @@ class _AddAttractionState extends State<AddAttraction> {
         child: ElevatedButton(
           onPressed: () {
             if (_formKey.currentState?.validate() ?? false) {
-              widget.addAttraction(
+              var attractionList = context.read<GuelphAttractions>();
+              attractionList.add(
                 Attraction(
                   title: titleController.text,
                   address: addressController.text,
@@ -151,6 +152,16 @@ class _AddAttractionState extends State<AddAttraction> {
                   isFree: _sliderValue,
                 ),
               );
+              // widget.addAttraction(
+              //   Attraction(
+              //     title: titleController.text,
+              //     address: addressController.text,
+              //     categories: [categoriesController.text],
+              //     imageURL: backgroundImageController.text,
+              //     description: descriptionController.text,
+              //     isFree: _sliderValue,
+              //   ),
+              // );
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Attraction Added')),

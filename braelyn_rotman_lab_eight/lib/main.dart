@@ -4,12 +4,24 @@ import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 
 import 'core/models/schedule.dart';
+import 'core/models/guelph_attractions.dart';
 
 
 void main() {
+  // runApp(
+  //   ChangeNotifierProvider(
+  //     create: (context) => ScheduleModel(),
+  //     child: MyApp(),
+  //
+  //   ),
+  // );
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ScheduleModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ScheduleModel()),
+        ChangeNotifierProvider(create: (context) => GuelphAttractions())
+       // Provider(create: (context) => SomeOtherClass()),
+      ],
       child: MyApp(),
     ),
   );
